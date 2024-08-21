@@ -16,14 +16,21 @@ Include a short readme that explains how to use the Terraform repo and that also
 
 ### Terraform
 
+[terraform](terraform) contains a demo deployment of eks and karpenter.
+
 ```
+cd terraform
 terraform init
 terraform apply
 ```
 
+| `terraform.tfvars` is excluded through `.gitignore`, containing sensetive variables
+
 ### k8s
 
+[k8s/examples](k8s/examples) contains k8s manifests for 2 scenarios - amd64 and arm64 related k8s workloads.
+
 ```
-kubectl apply -f k8s/workload-amd64.yaml
-kubectl apply -f k8s/workload-arm64.yaml
+k apply -f k8s/examples/amd64.yaml
+k apply -f k8s/examples/arm64.yaml
 ```

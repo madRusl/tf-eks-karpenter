@@ -2,12 +2,23 @@
 # Global
 #################################################################
 
+variable "region" {
+  default = "us-east-2"
+}
+variable "application" {
+  default = "tech"
+}
+variable "environment" {
+  default = "dev"
+}
+
+#################################################################
+# Sensetive variables
+#################################################################
+
 variable "aws_profile" {}
-variable "region" {}
-variable "application" {}
-variable "environment" {}
-variable "cluster_admin_arn" {}
 variable "custom_public_access_cidr" {}
+variable "cluster_admin_arn" {}
 
 #################################################################
 # Network
@@ -28,6 +39,7 @@ variable "create_eks" {
 variable "cluster_version" {
   description = "Kubernetes <major>.<minor> version to use for the EKS cluster (i.e.: 1.21)"
   type        = string
+  default     = 1.30
 }
 
 variable "cloudwatch_log_group_retention_in_days" {
@@ -61,7 +73,9 @@ variable "node_security_group_additional_rules" {
 variable "worker_instance_type" {
   description = "EKS node instance types for ON-DEMAND (generic map)"
   type        = map(any)
-  default     = {}
+  default = {
+    karpenter = "t4g.medium"
+  }
 }
 
 #########################
