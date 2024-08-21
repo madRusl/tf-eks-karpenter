@@ -72,6 +72,13 @@ resource "helm_release" "karpenter" {
     module.karpenter
   ]
 }
+# required for karpenter subnet discovery
+resource "aws_ec2_tag" "this" {
+  for_each    = toset(data.aws_subnets.internal.ids)
+  resource_id = each.value
+  key         = "kubernetes.io/cluster/${module.eks.cluster_name}"
+  value       = "*"
+}
 
 resource "kubectl_manifest" "karpenter_node_class" {
   yaml_body = <<-YAML

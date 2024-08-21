@@ -13,13 +13,6 @@ data "aws_subnets" "internal" {
   }
 }
 
-resource "aws_ec2_tag" "this" {
-  for_each    = toset(data.aws_subnets.internal.ids)
-  resource_id = each.value
-  key         = "kubernetes.io/cluster/${module.eks.cluster_name}"
-  value       = "*"
-}
-
 #################################################################
 # ECR
 #################################################################
