@@ -1,0 +1,47 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: awscli-arm64
+  namespace: default
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              # karpenter nodepool selector
+              - key: karpenter.sh/nodepool
+                operator: In
+                values:
+                  - dev
+              # well-known labels (https://kubernetes.io/docs/reference/labels-annotations-taints/)
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                  - arm64
+              # - key: node.kubernetes.io/instance-type
+              #   operator: In
+              #   values:
+              #     - t4g.medium
+  priority: 0
+  restartPolicy: Always
+  terminationGracePeriodSeconds: 0
+  serviceAccount: default
+  containers:
+    - image: amazon/aws-cli:latest
+      imagePullPolicy: IfNotPresent
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          sleep 600;
+      name: ubuntu
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "100m"
+        limits:
+          memory: "128Mi"
+          cpu: "200m"
+      stdin: true
+      tty: true
