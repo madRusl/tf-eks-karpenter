@@ -51,6 +51,10 @@ spec:
     spec:
       nodeClassRef:
         name: <your-nodeclass-name>
+      taints:
+        - key: nvidia.com/gpu
+          effect: NoSchedule
+      # simplified requirements for a demo?
       requirements:
         - key: kubernetes.io/arch
           operator: In
@@ -59,7 +63,6 @@ spec:
         - key: "karpenter.sh/capacity-type"
           operator: In
           values: ["spot", "on-demand"]
-        # strict instance-type for demo?
         # https://aws.amazon.com/ec2/instance-explorer
         - key: "instance-type"
           operator: In
