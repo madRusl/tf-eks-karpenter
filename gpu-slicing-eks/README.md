@@ -74,11 +74,16 @@ spec:
 ```
 
 NOTE: in case of eks managed node groups label nodes accordingly.
-in terraform or via `kubectl label nodes $NODE nvidia.com/mig.config=all-1g.5gb --overwrite`
-(or `kubectl label nodes $NODE nvidia.com/mig.config=all-balanced --overwrite` in case of mixed strategy)
+in terraform or via kubectl
+
+```bash
+kubectl label nodes $NODE nvidia.com/mig.config=all-1g.5gb --overwrite
+# or in case of mixed strategy:
+# kubectl label nodes $NODE nvidia.com/mig.config=all-balanced --overwrite
+```
 
 2. enable MIG profiles
-- gpu-operator should point to this custom config `--set migManager.config.name=<custom-mig-parted-config>`. However, it is also should be possible to select pre-defined profile from gpu-operator chart?
+- gpu-operator should point to this custom config `--set migManager.config.name=<custom-mig-parted-config>`. However, it is also should be possible to select pre-defined profile from gpu-operator chart for a particular GPU device?
 
 
 ```yaml
@@ -115,7 +120,7 @@ spec:
     resources:
       limits:
         nvidia.com/gpu: 7
-        # or if opt to "mixed.strategy: mixed"
+        # or if opted to "mixed.strategy: mixed"
         # nvidia.com/mig-1g.5gb: 1
         # nvidia.com/mig-2g.10gb: 1
         # # these profiles are defined in mig-parted configmap?
@@ -161,7 +166,7 @@ That should allow k8s workload to schedule 10 replicas per previously defined GP
 kubectl get nodes -l <NODE_LABEL> -o json | jq -r '.items[] | select(.status.capacity."nvidia.com/gpu" != null) | {name: .metadata.name, capacity: .status.capacity}'
 ```
 
-And scale deployment accordingly
+And scale deployment accordingly:
 
 ```bash
 kubectl scale deploy deploymentA --replicas X
